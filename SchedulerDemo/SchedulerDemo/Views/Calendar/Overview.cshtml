@@ -1,0 +1,236 @@
+﻿@using DevExtreme.AspNet.Mvc
+
+<link rel="stylesheet" href="~/css/overview-custom.css" />
+<script src="~/lib/jquery.min.js"></script>
+<script src="~/lib/dx.all.js"></script>
+<script src="~/lib/devextreme-aspnet-data.js"></script>
+
+@(Html.DevExtreme().Scheduler()
+    .DataSource(d => d.Mvc()
+        .Controller("Calendar")
+        .LoadAction("GetAppointments")
+        .InsertAction("PostAppointment")
+        .UpdateAction("PutAppointment")
+        .DeleteAction("DeleteAppointment")
+        .Key("appointmentId")
+    )
+    .TimeZone("Europe/Istanbul")
+    .TextExpr("text")
+    .DescriptionExpr("description")
+    .StartDateExpr("startDate")
+    .EndDateExpr("endDate")
+    .AllDayExpr("allDay")
+    .Views(new[] { SchedulerViewType.Month, SchedulerViewType.Week, SchedulerViewType.Day })
+    .CurrentView(SchedulerViewType.Month)
+    .CurrentDate(DateTime.Now)
+    .FirstDayOfWeek(FirstDayOfWeek.Monday)
+    .ShowCurrentTimeIndicator(true)
+    .IndicatorUpdateInterval(30000)
+    .StartDayHour(8)
+    .EndDayHour(19)
+    .ShowAllDayPanel(false)
+    .Height(710)
+    .Groups(new[] { "employeeID" })
+    .Resources(res => {
+        res.Add()
+        .FieldExpr("employeeID")
+        .ColorExpr("Color")
+        .DisplayExpr("Text")
+        .ValueExpr("Id")
+        .AllowMultiple(false)
+        .Label("Usta")
+        .DataSource(new[] {
+            new { Id = 1, Text = "Ahmet Usta", Color = "#388e3c", Avatar = Url.Content("~/images/ahmet.png"), Age = 44, Discipline = "Demirci" },
+            new { Id = 2, Text = "Mehmet Usta", Color = "#c25100", Avatar = Url.Content("~/images/mehmet.png"), Age = 39, Discipline = "Tamirci" },
+            new { Id = 3, Text = "Ziya Usta", Color = "#3157a4", Avatar = Url.Content("~/images/ziya.png"), Age = 41, Discipline = "Kaynakçı" }
+        });
+    })
+    .OnAppointmentFormOpening("onAppointmentFormOpening")
+    .ResourceCellTemplate(new JS("resourceCellTemplateFunction"))
+    .OnContentReady("onSchedulerReady")
+    .OnOptionChanged("onSchedulerOptionChanged")
+)
+
+<script>
+    function scrollToCurrentTime(scheduler) {
+    var currentView = scheduler.option("currentView");
+    
+    if (currentView === "day" || currentView === "week") {
+        var now = new Date();
+
+        setTimeout(function() {
+            scheduler.scrollToTime(now.getHours(), now.getMinutes());
+            }, 100);
+        }
+    }
+    function onSchedulerReady(e) {
+        scrollToCurrentTime(e.component);
+    }
+    function onSchedulerOptionChanged(e) {
+        if (e.name === "currentView") {
+            scrollToCurrentTime(e.component);
+        }
+    }
+
+    function onAppointmentFormOpening(e) {
+        var form = e.form;
+        var appointmentData = e.appointmentData;
+        var appointmentId = appointmentData.appointmentId || 0;
+
+        form.isLogsLoaded = false;
+
+        if (appointmentId === 0) {
+            return;
+        }
+
+        var items = form.option("items");
+        var historyGroupExists = items.some(function(item) { return item.ID === "historyGroup"; });
+
+        if (!historyGroupExists) {
+            items.push({
+                ID: "historyGroup",
+                itemType: "group",
+                colSpan: 2,
+                caption: "İşlem Geçmişi",
+                items: [{
+                    itemType: "simple",
+                    label: { visible: false },
+                    template: function() {
+                        return $("<div id='appointment-logs'><i>Loglar yükleniyor...</i></div>");
+                    }
+                }]
+            });
+            form.option("items", items);
+        } else {
+            $("#appointment-logs").html("<i>Loglar yükleniyor...</i>");
+        }
+
+        const originalOnContentReady = form.option('onContentReady');
+        form.option('onContentReady', function(args) {
+            if (originalOnContentReady) { originalOnContentReady.apply(this, args); }
+
+            if (!form.isLogsLoaded) {
+                $.ajax({
+                    url: '@Url.Action("GetAppointmentLogs", "Calendar")',
+                    type: 'GET',
+                    data: { appointmentId: appointmentId },
+                    success: function(logs) {
+                        var $logContainer = $("#appointment-logs");
+                        $logContainer.empty();
+
+                        if (logs && logs.length > 0) {
+                            var $mainTable = $('<table class="log-table"></table>');
+                            $mainTable.append('<thead><tr><th>Tarih</th><th>İşlem</th><th>Usta</th><th>Detay</th></tr></thead>');
+                            
+                            var $tbody = $('<tbody></tbody>');
+                            logs.forEach(function(log) {
+                                var $row = $('<tr></tr>');
+                                var timestamp = new Date(log.timestamp).toLocaleString('tr-TR');
+                                
+                                $row.append($('<td></td>').text(timestamp));
+                                $row.append($('<td></td>').text(log.action));
+                                $row.append($('<td></td>').text(log.ustaName));
+                                
+                                var $detailsCell = $('<td></td>');
+                                if (log.action === "GÜNCELLENDİ" && log.changes && log.changes.length > 0) {
+                                    var $detailsTable = $('<table class="details-table"></table>');
+                                    $detailsTable.append('<thead><tr><th>Alan</th><th>Önceki Değer</th><th>Yeni Değer</th></tr></thead>');
+                                    var $detailsBody = $('<tbody></tbody>');
+                                    log.changes.forEach(function(change){
+                                        var $changeRow = $('<tr></tr>');
+                                        $changeRow.append($('<td></td>').text(change.fieldName));
+                                        $changeRow.append($('<td></td>').text(change.oldValue));
+                                        $changeRow.append($('<td></td>').text(change.newValue));
+                                        $detailsBody.append($changeRow);
+                                    });
+                                    $detailsTable.append($detailsBody);
+                                    $detailsCell.append($detailsTable);
+                                } else {
+                                    var detailText = log.appointmentText;
+                                    if(log.changes && log.changes.length > 0) {
+                                        detailText += " - " + log.changes[0].newValue;
+                                    }
+                                    $detailsCell.text(detailText);
+                                }
+                                $row.append($detailsCell);
+                                $tbody.append($row);
+                            });
+                            
+                            $mainTable.append($tbody);
+                            $logContainer.append($mainTable);
+
+                        } else {
+                            $logContainer.append($("<div>").text("Bu randevu için işlem kaydı bulunamadı."));
+                        }
+                    },
+                    error: function() {
+                        $("#appointment-logs").html("<div style='color:red;'>Loglar yüklenirken bir hata oluştu.</div>");
+                    }
+                });
+                form.isLogsLoaded = true;
+            }
+        });
+    }
+
+    function resourceCellTemplateFunction(resourceData, index, container) {
+        var data = resourceData.data;
+        var $outerDiv = $("<div>");
+        $("<div>").addClass("name").css("background-color", data.Color).append($("<h2>").text(data.Text)).appendTo($outerDiv);
+        $("<div>").addClass("avatar").attr("title", data.Text).append($("<img>").attr("src", data.Avatar).attr("alt", "")).appendTo($outerDiv);
+        var $infoDiv = $("<div>").addClass("info").css("color", data.Color);
+        $infoDiv.append("Yaş: " + data.Age).append("<br />").append($("<b>").text(data.Discipline));
+        $infoDiv.appendTo($outerDiv);
+        container.append($outerDiv);
+    }
+</script>
+
+<style>
+    .avatar img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+    .info { font-size: 13px; padding-top: 5px; text-align: center; }
+    .name { font-size: 16px; font-weight: bold; padding: 5px; border-radius: 5px; color: #fff; text-align: center; }
+    .day-cell { padding: 5px; }
+    .dx-scheduler-group-header { padding: 10px !important; }
+     #appointment-logs {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        max-height: 150px;
+        overflow-y: auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 12px;
+    }
+    #appointment-logs .log-entry {
+        padding: 2px 0;
+        border-bottom: 1px dotted #ccc;
+    }
+    #appointment-logs .log-entry:last-child {
+        border-bottom: none;
+        
+    #appointment-logs {
+    display: block;
+    max-height: 250px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    }
+
+    .log-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .log-table > tbody > tr > td {
+    vertical-align: top;
+    padding-top: 10px;
+    }
+
+    .details-table {
+        width: auto;
+        min-width: 100%; 
+        white-space: nowrap; 
+    }
+}
+</style>

@@ -1,0 +1,21 @@
+{"Timestamp":"2025-06-26T15:40:47.0729058+03:00","Action":"OLUŞTURULDU","AppointmentId":11,"AppointmentText":"Randevu 'test'","Changes":null}
+{"Timestamp":"2025-06-26T15:40:50.3939444+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'test'","Changes":[{"FieldName":"Açıklama","OldValue":"test2","NewValue":"test23"}]}
+{"Timestamp":"2025-06-26T15:41:01.6616538+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'test'","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T15:42:54.6501627+03:00","Action":"OLUŞTURULDU","AppointmentId":11,"AppointmentText":"Randevu 'st'","Changes":null}
+{"Timestamp":"2025-06-26T15:42:57.8326485+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'st'","Changes":[{"FieldName":"Açıklama","OldValue":"st","NewValue":"stst"}]}
+{"Timestamp":"2025-06-26T15:43:21.7235051+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'st'","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T15:44:24.2233632+03:00","Action":"OLUŞTURULDU","AppointmentId":11,"AppointmentText":"Randevu 'asdasd'","Changes":null}
+{"Timestamp":"2025-06-26T15:44:27.5171867+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'asdasdasd'","Changes":[{"FieldName":"Başlık","OldValue":"asdasd","NewValue":"asdasdasd"}]}
+{"Timestamp":"2025-06-26T15:45:03.4678621+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'asdasdasd'","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T15:45:06.977233+03:00","Action":"SİLİNDİ","AppointmentId":11,"AppointmentText":"Randevu 'asdasdasd'","Changes":null}
+{"Timestamp":"2025-06-26T15:59:54.4471027+03:00","Action":"OLUŞTURULDU","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":null}
+{"Timestamp":"2025-06-26T15:59:57.5995126+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Açıklama","OldValue":"asdasdasd","NewValue":"asdasdasdsadasd"}]}
+{"Timestamp":"2025-06-26T16:00:29.3969265+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T16:00:42.2886009+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T16:00:51.6608976+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T16:03:02.4736+03:00","Action":"OLUŞTURULDU","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":null}
+{"Timestamp":"2025-06-26T16:03:09.9022086+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Açıklama","OldValue":"1231123","NewValue":"birikiüç"}]}
+{"Timestamp":"2025-06-26T16:03:17.453632+03:00","Action":"GÜNCELLENDİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Başlangıç Tarihi","OldValue":"26.06.2025 05:00","NewValue":"26.06.2025 07:00"}]}
+{"Timestamp":"2025-06-26T16:03:36.5388412+03:00","Action":"BİLGİ","AppointmentId":11,"AppointmentText":"Randevu 'asd'","UstaName":"Ahmet Usta","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
+{"Timestamp":"2025-06-26T16:51:53.3520805+03:00","Action":"GÜNCELLENDİ","AppointmentId":5,"AppointmentText":"Randevu 'Pencere Montajı'","UstaName":"Ziya Usta","Changes":[{"FieldName":"Açıklama","OldValue":null,"NewValue":"qwdeqw"}]}
+{"Timestamp":"2025-06-26T16:52:24.8243926+03:00","Action":"BİLGİ","AppointmentId":5,"AppointmentText":"Randevu 'Pencere Montajı'","UstaName":"Ziya Usta","Changes":[{"FieldName":"Durum","OldValue":null,"NewValue":"Değişiklik yapılmadan kapatıldı."}]}
